@@ -6,7 +6,7 @@ import path from 'path'
 export default defineConfig({
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/main.js'),
+      entry: path.resolve(__dirname, 'src/lib.js'),
       name: 'Vue3Tour'
     },
     rollupOptions: {
