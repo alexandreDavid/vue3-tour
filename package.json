@@ -1,6 +1,6 @@
 {
   "name": "vue3-tour",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -19,5 +19,19 @@
   },
   "main": "dist/vue3-tour.umd.js",
   "browser": "dist/vue3-tour.umd.js",
-  "module": "dist/vue3-tour.es.js"
+  "module": "dist/vue3-tour.es.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexandreDavid/vue3-tour.git"
+  },
+  "keywords": [
+    "vue",
+    "tour"
+  ],
+  "author": "Alexandre David",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexandreDavid/vue3-tour/issues"
+  },
+  "homepage": "https://github.com/alexandreDavid/vue3-tour#readme"
 }
