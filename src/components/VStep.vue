@@ -92,7 +92,7 @@ export default {
     }
   },
   emits: ['targetNotFound'],
-  setup(props) {
+  setup(props, context) {
     const hash = sum(props.step.target)
     const targetElement = document.querySelector(props.step.target)
 
@@ -127,7 +127,7 @@ export default {
         if (props.debug) {
           console.error('[Vue Tour] The target element ' + props.step.target + ' of .v-step[id="' + hash + '"] does not exist!')
         }
-        props.$emit('targetNotFound', props.step)
+        context.emit('targetNotFound', props.step)
         if (props.stopOnFail) {
           props.stop()
         }
