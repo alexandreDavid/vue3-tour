@@ -1,4 +1,4 @@
-import VTour from './components/Vtour.vue'
+import VTour from './components/VTour.vue'
 import VStep from './components/VStep.vue'
 
 const install = (app) => {
