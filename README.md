@@ -14,10 +14,10 @@ Forked from [vue-tour](https://github.com/pulsardev/vue-tour)
 
 ## Getting Started
 
-You can install `vue-tour` using npm or by downloading the minified build on GitHub.
+You can install `vue3-tour` using npm or by downloading the minified build on GitHub.
 
 ```
-npm install vue-tour
+npm install vue3-tour
 ```
 
 Then import the plugin in your application entry point (typically main.js if you used vue-cli to scaffold your project) and tell Vue to use it.
@@ -96,7 +96,7 @@ For a more detailed documentation, checkout the [docs for vue-tour](https://gith
 
 ## `before()` UI step functions
 
-If you need to do UI setup work before a step, there's a `before` function you may include in any/each of 
+If you need to do UI setup work before a step, there's a `before` function you may include in any/each of
 your steps. This function will get invoked before the start/next/previous step is rendered. The function must return a promise. The function is invoked when `start`, `nextStep`, and `previousStep` are triggered. When the promise is rejected, it will not move to the next or previous step. If the promise is resolved then it will move in the direction specified.
 
 It's used when you need to change what's shown on the screen between steps. For example, you may want to hide
