@@ -196,7 +196,7 @@ export default {
 
     onMounted(() => {
       const app = getCurrentInstance()
-      app.appContext.config.globalProperties.$tours[props.name] = { step, start, isRunning, customOptions, currentStep, isFirst, isLast, previousStep, nextStep, stop, skip, finish }
+      app.appContext.config.globalProperties.$tours[props.name] = { step, start, isRunning, customOptions, currentStep, isFirst, isLast, previousStep, nextStep, stop, skip, finish, numberOfSteps }
       if (customOptions.value.useKeyboardNavigation) {
         window.addEventListener('keyup', handleKeyup)
       }
