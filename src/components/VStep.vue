@@ -33,7 +33,7 @@
 
 <script>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import Popper from 'popper.js'
+import { createPopper } from '@popperjs/core'
 import jump from 'jump.js'
 import sum from 'hash-sum'
 import { DEFAULT_STEP_OPTIONS, HIGHLIGHT } from '../shared/constants'
@@ -117,8 +117,7 @@ export default {
         enableScrolling()
         createHighlight()
 
-        /* eslint-disable no-new */
-        new Popper(
+        createPopper(
           targetElement,
           VStep.value,
           params.value
