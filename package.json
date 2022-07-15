@@ -7,8 +7,8 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.5",
     "jump.js": "^1.0.2",
-    "popper.js": "^1.16.1",
     "vue": "^3.0.5"
   },
   "devDependencies": {
