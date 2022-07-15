@@ -8,15 +8,19 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.5",
+    "hash-sum": "^2.0.0",
     "jump.js": "^1.0.2",
-    "vue": "^3.0.5"
+    "vue": "^3.2.37"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^1.1.5",
-    "@vue/compiler-sfc": "^3.0.5",
-    "sass": "^1.32.8",
+    "@vitejs/plugin-vue": "^1.9.0",
+    "sass": "^1.53.0",
     "vite": "^2.0.5"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "main": "dist/vue3-tour.umd.js",
   "browser": "dist/vue3-tour.umd.js",
   "module": "dist/vue3-tour.es.js",
