@@ -5,15 +5,15 @@
     </div> -->
     <div class="v-step" :id="'v-step-' + hash" ref="VStep">
       <slot name="header">
-        <div v-if="step.header" class="v-step__header">
+        <div v-if="step?.header" class="v-step__header">
           <div v-if="step.header.title" v-html="step.header.title"></div>
         </div>
       </slot>
 
       <slot name="content">
         <div class="v-step__content">
-          <div v-if="step.content" v-html="step.content"></div>
-          <div v-else>props is a demo step! The id of props step is {{ hash }} and it targets {{ step.target }}.</div>
+          <div v-if="step?.content" v-html="step.content"></div>
+          <div v-else>props is a demo step! The id of props step is {{ hash }} and it targets {{ step!.target }}.</div>
         </div>
       </slot>
 
@@ -31,39 +31,38 @@
   <!-- </teleport> -->
 </template>
 
-<script>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+<script lang="ts">
+import { ref, computed, onMounted, onUnmounted, defineComponent, type PropType, Ref } from 'vue'
 import { createPopper } from '@popperjs/core'
 import jump from 'jump.js'
 import sum from 'hash-sum'
-import { DEFAULT_STEP_OPTIONS, HIGHLIGHT } from '../shared/constants'
 
-export default {
+import { Step } from '../lib';
+import { DEFAULT_STEP_OPTIONS, HIGHLIGHT, Labels } from '../shared/constants'
+
+
+
+export default defineComponent({
   name: 'v-step',
   props: {
     step: {
-      type: Object
+      type: Object as PropType<Step>,
+      required: true,
     },
     previousStep: {
-      type: Function
+      type: Function as PropType<(evt?: MouseEvent) => void>
     },
     nextStep: {
-      type: Function
+      type: Function as PropType<(evt?: MouseEvent) => void>
     },
     stop: {
-      type: Function
+      type: Function as PropType<(evt?: MouseEvent) => void>
     },
     skip: {
-      type: Function,
-      default: function () {
-        props.stop()
-      }
+      type: Function as PropType<(evt?: MouseEvent) => void>,
     },
     finish: {
-      type: Function,
-      default: function () {
-        props.stop()
-      }
+      type: Function as PropType<(evt?: MouseEvent) => void>,
     },
     isFirst: {
       type: Boolean
@@ -72,7 +71,8 @@ export default {
       type: Boolean
     },
     labels: {
-      type: Object
+      type: Object as PropType<Labels>,
+      required: true
     },
     displayMask: {
       type: Boolean,
@@ -94,7 +94,7 @@ export default {
   emits: ['targetNotFound'],
   setup(props, context) {
     const hash = sum(props.step.target)
-    const targetElement = document.querySelector(props.step.target)
+    const targetElement = document.querySelector(props.step.target) as HTMLElement
 
     const params = computed(() => {
       return {
@@ -106,7 +106,7 @@ export default {
     })
 
 
-    const VStep = ref(null)
+    const VStep: Ref<HTMLElement | null> = ref(null)
 
     const createStep = () => {
       if (props.debug) {
@@ -119,7 +119,7 @@ export default {
 
         createPopper(
           targetElement,
-          VStep.value,
+          VStep.value as HTMLElement,
           params.value
         )
       } else {
@@ -128,7 +128,7 @@ export default {
         }
         context.emit('targetNotFound', props.step)
         if (props.stopOnFail) {
-          props.stop()
+          props.stop?.();
         }
       }
     }
@@ -146,7 +146,7 @@ export default {
           jump(targetElement, jumpOptions)
         } else {
           // Use the native scroll by default if no scroll options has been defined
-          targetElement.scrollIntoView({ behavior: 'smooth' })
+          targetElement?.scrollIntoView({ behavior: 'smooth' })
         }
       }
     }
@@ -159,7 +159,7 @@ export default {
     }
 
     const createHighlight = () => {
-      if (isHighlightEnabled()) {
+      if (isHighlightEnabled() && targetElement) {
         document.body.classList.add(HIGHLIGHT.CLASSES.ACTIVE)
         const transitionValue = window.getComputedStyle(targetElement).getPropertyValue('transition')
 
@@ -192,7 +192,7 @@ export default {
       }
     }
 
-    const isButtonEnabled = (name) => {
+    const isButtonEnabled = (name: string) => {
       return params.value.enabledButtons.hasOwnProperty(name) ? params.value.enabledButtons[name] : true
     }
 
@@ -200,9 +200,9 @@ export default {
 
     onUnmounted(removeHighlight)
 
-    return { hash, isButtonEnabled, VStep }
+    return { hash, isButtonEnabled, props, VStep }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

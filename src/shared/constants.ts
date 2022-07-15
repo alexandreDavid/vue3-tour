@@ -1,3 +1,5 @@
+import { Modifier, Placement } from "@popperjs/core";
+
 export const DEFAULT_CALLBACKS = {
   onStart: () => {},
   onPreviousStep: (currentStep) => {},
@@ -31,6 +33,9 @@ export const DEFAULT_OPTIONS = {
   debug: false
 }
 
+export type Options = typeof DEFAULT_OPTIONS & { stopOnTargetNotFound: boolean };
+export type Labels = typeof DEFAULT_OPTIONS.labels;
+
 export const HIGHLIGHT = {
   CLASSES: {
     ACTIVE: 'v-tour--active',
@@ -43,15 +48,26 @@ export const HIGHLIGHT = {
   stopOnTargetNotFound: true
 }
 
-export const DEFAULT_STEP_OPTIONS = {
+export interface StepOptions {
+  enableScrolling: boolean;
+  highlight: boolean
+  enabledButtons: typeof DEFAULT_OPTIONS.enabledButtons,
+  modifiers: Array<Partial<Modifier<any,any>>>,
+  placement: Placement
+}
+
+export const DEFAULT_STEP_OPTIONS: StepOptions = {
   enableScrolling: true,
   highlight: DEFAULT_OPTIONS.highlight, // By default use the global tour setting
   enabledButtons: DEFAULT_OPTIONS.enabledButtons,
-  modifiers: {
-    arrow: {
-      element: '.v-step__arrow'
-    }
-  },
+  modifiers: [
+    {
+      name: 'arrow',
+      options: {
+        element: '.v-step__arrow'
+      }
+    },
+  ],
   placement: 'bottom'
 }
 
