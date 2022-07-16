@@ -2,8 +2,8 @@ import { Modifier, Placement } from "@popperjs/core";
 
 export const DEFAULT_CALLBACKS = {
   onStart: () => {},
-  onPreviousStep: (currentStep) => {},
-  onNextStep: (currentStep) => {},
+  onPreviousStep: (currentStep: number) => {},
+  onNextStep: (currentStep: number) => {},
   onStop: () => {},
   onSkip: () => {},
   onFinish: () => {}
