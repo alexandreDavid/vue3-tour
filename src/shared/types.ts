@@ -1,10 +1,10 @@
 import type { Modifier, Placement } from '@popperjs/core';
 
-export type Button = 'buttonSkip' | 'buttonPrevious' | 'buttonNext' | 'buttonStop';
+export type ButtonID = 'buttonSkip' | 'buttonPrevious' | 'buttonNext' | 'buttonStop';
 
-export type EnabledButtons = Record<Button, boolean>;
+export type EnabledButtons = Record<ButtonID, boolean>;
 
-export type Labels = Record<Button, string>;
+export type Labels = Record<ButtonID, string>;
 
 export interface Options {
   highlight?: false;
