@@ -106,7 +106,7 @@ export default defineComponent({
           resolve()
         }, customOptions.value.startTimeout)
       })
-      if (typeof step.before !== 'undefined') {
+      if (step.before) {
         try {
           await step.before('start')
         } catch (e) {
@@ -126,7 +126,7 @@ export default defineComponent({
       })
       if (futureStep > -1) {
         let step = props.steps[futureStep]
-        if (typeof step.before !== 'undefined') {
+        if (step.before) {
           try {
             await step.before('previous')
           } catch (e) {
@@ -147,7 +147,7 @@ export default defineComponent({
       })
       if (futureStep < numberOfSteps.value && currentStep.value !== -1) {
         let step = props.steps[futureStep]
-        if (typeof step.before !== 'undefined') {
+        if (step.before) {
           try {
             await step.before('next')
           } catch (e) {
