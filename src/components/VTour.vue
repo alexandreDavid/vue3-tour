@@ -45,8 +45,8 @@
 <script lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, getCurrentInstance, defineComponent, type PropType } from 'vue'
 
-import { Step } from '../lib';
-import { DEFAULT_CALLBACKS, DEFAULT_OPTIONS, KEYS, Options } from '../shared/constants'
+import type { Options, Step } from '../shared/types';
+import { DEFAULT_CALLBACKS, DEFAULT_OPTIONS, KEYS } from '../shared/constants'
 
 export default defineComponent({
   name: 'v-tour',

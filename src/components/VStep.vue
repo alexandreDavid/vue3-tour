@@ -37,9 +37,8 @@ import { createPopper } from '@popperjs/core'
 import jump from 'jump.js'
 import sum from 'hash-sum'
 
-import { Step } from '../lib';
-import { DEFAULT_STEP_OPTIONS, HIGHLIGHT, Labels } from '../shared/constants'
-
+import { DEFAULT_STEP_OPTIONS, HIGHLIGHT } from '../shared/constants'
+import type { Labels, Step } from '../shared/types';
 
 
 export default defineComponent({

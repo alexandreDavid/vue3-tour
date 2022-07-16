@@ -1,5 +1,3 @@
-import { Modifier, Placement } from "@popperjs/core";
-
 export const DEFAULT_CALLBACKS = {
   onStart: () => {},
   onPreviousStep: (currentStep: number) => {},
@@ -33,9 +31,6 @@ export const DEFAULT_OPTIONS = {
   debug: false
 }
 
-export type Options = typeof DEFAULT_OPTIONS & { stopOnTargetNotFound: boolean };
-export type Labels = typeof DEFAULT_OPTIONS.labels;
-
 export const HIGHLIGHT = {
   CLASSES: {
     ACTIVE: 'v-tour--active',
@@ -48,13 +43,7 @@ export const HIGHLIGHT = {
   stopOnTargetNotFound: true
 }
 
-export interface StepOptions {
-  enableScrolling: boolean;
-  highlight: boolean
-  enabledButtons: typeof DEFAULT_OPTIONS.enabledButtons,
-  modifiers: Array<Partial<Modifier<any,any>>>,
-  placement: Placement
-}
+
 
 export const DEFAULT_STEP_OPTIONS: StepOptions = {
   enableScrolling: true,
