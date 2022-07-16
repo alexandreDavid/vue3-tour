@@ -2,6 +2,7 @@
   "name": "vue3-tour",
   "version": "0.3.1",
   "scripts": {
+    "check": "vue-tsc --noEmit",
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview"
