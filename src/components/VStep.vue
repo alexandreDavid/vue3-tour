@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, onMounted, onUnmounted, defineComponent, type PropType, Ref } from 'vue'
+import { ref, computed, onMounted, onUnmounted, defineComponent, type PropType, type Ref } from 'vue'
 import { createPopper } from '@popperjs/core'
 import jump from 'jump.js'
 import sum from 'hash-sum'

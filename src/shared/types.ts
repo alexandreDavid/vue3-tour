@@ -1,4 +1,4 @@
-import { Modifier, Placement } from '@popperjs/core';
+import type { Modifier, Placement } from '@popperjs/core';
 
 export type Button = 'buttonSkip' | 'buttonPrevious' | 'buttonNext' | 'buttonStop';
 

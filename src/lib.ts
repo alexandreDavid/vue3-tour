@@ -1,4 +1,4 @@
-import { App } from 'vue';
+import type { App } from 'vue'
 
 import VTour from './components/VTour.vue'
 import VStep from './components/VStep.vue'
