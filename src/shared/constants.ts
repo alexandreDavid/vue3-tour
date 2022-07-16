@@ -1,3 +1,5 @@
+import type { Options, StepOptions } from "./types"
+
 export const DEFAULT_CALLBACKS = {
   onStart: () => {},
   onPreviousStep: (currentStep: number) => {},
@@ -7,7 +9,7 @@ export const DEFAULT_CALLBACKS = {
   onFinish: () => {}
 }
 
-export const DEFAULT_OPTIONS = {
+export const DEFAULT_OPTIONS: Options = {
   highlight: false,
   labels: {
     buttonSkip: 'Skip tour',
@@ -42,8 +44,6 @@ export const HIGHLIGHT = {
   startTimeout: 0,
   stopOnTargetNotFound: true
 }
-
-
 
 export const DEFAULT_STEP_OPTIONS: StepOptions = {
   enableScrolling: true,
