@@ -194,7 +194,7 @@ export default defineComponent({
 
     const isKeyEnabled = (key: 'ESCAPE' | 'ARROW_LEFT' | 'ARROW_RIGHT') => {
       const { enabledNavigationKeys } = customOptions.value
-      return enabledNavigationKeys.hasOwnProperty(key) ? enabledNavigationKeys[key] : true
+      return enabledNavigationKeys?.hasOwnProperty(key) ? enabledNavigationKeys[key] : true
     }
 
     onMounted(() => {
