@@ -60,11 +60,11 @@ export default defineComponent({
       required: true,
     },
     options: {
-      type: Object as PropType<Options>,
+      type: Object as PropType<Partial<Options>>,
       default: () => { return DEFAULT_OPTIONS }
     },
     callbacks: {
-      type: Object as PropType<typeof DEFAULT_CALLBACKS>,
+      type: Object as PropType<Partial<typeof DEFAULT_CALLBACKS>>,
       default: () => { return DEFAULT_CALLBACKS }
     }
   },
