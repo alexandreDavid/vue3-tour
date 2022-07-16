@@ -42,26 +42,29 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
+<script lang="ts">
+import { ref, computed, onMounted, onBeforeUnmount, getCurrentInstance, defineComponent, type PropType } from 'vue'
+
+import type { Options, Step } from '../shared/types';
 import { DEFAULT_CALLBACKS, DEFAULT_OPTIONS, KEYS } from '../shared/constants'
 
-export default {
+export default defineComponent({
   name: 'v-tour',
   props: {
     steps: {
-      type: Array,
+      type: Array as PropType<Step[]>,
       default: () => []
     },
     name: {
-      type: String
+      type: String,
+      required: true,
     },
     options: {
-      type: Object,
+      type: Object as PropType<Partial<Options>>,
       default: () => { return DEFAULT_OPTIONS }
     },
     callbacks: {
-      type: Object,
+      type: Object as PropType<Partial<typeof DEFAULT_CALLBACKS>>,
       default: () => { return DEFAULT_CALLBACKS }
     }
   },
@@ -92,18 +95,18 @@ export default {
 
     const step = computed(() => props.steps[currentStep.value])
 
-    const start = async (startStep) => {
+    const start = async (startStep: string) => {
       // Wait for the DOM to be loaded, then start the tour
-      startStep = typeof startStep !== 'undefined' ? parseInt(startStep, 10) : 0
-      let step = props.steps[startStep]
-      let process = () => new Promise((resolve, reject) => {
+      const startStepIdx = typeof startStep !== 'undefined' ? parseInt(startStep, 10) : 0
+      const step = props.steps[startStepIdx]
+      let process = () => new Promise<void>((resolve, reject) => {
         setTimeout(() => {
           customCallbacks.value.onStart()
-          currentStep.value = startStep
+          currentStep.value = startStepIdx
           resolve()
         }, customOptions.value.startTimeout)
       })
-      if (typeof step.before !== 'undefined') {
+      if (step.before) {
         try {
           await step.before('start')
         } catch (e) {
@@ -116,14 +119,14 @@ export default {
 
     const previousStep = async () => {
       let futureStep = currentStep.value - 1
-      let process = () => new Promise((resolve, reject) => {
+      let process = () => new Promise<void>((resolve, reject) => {
         customCallbacks.value.onPreviousStep(currentStep.value)
         currentStep.value = futureStep
         resolve()
       })
       if (futureStep > -1) {
         let step = props.steps[futureStep]
-        if (typeof step.before !== 'undefined') {
+        if (step.before) {
           try {
             await step.before('previous')
           } catch (e) {
@@ -137,14 +140,14 @@ export default {
 
     const nextStep = async () => {
       let futureStep = currentStep.value + 1
-      let process = () => new Promise((resolve, reject) => {
+      let process = () => new Promise<void>((resolve, reject) => {
         customCallbacks.value.onNextStep(currentStep.value)
         currentStep.value = futureStep
         resolve()
       })
       if (futureStep < numberOfSteps.value && currentStep.value !== -1) {
         let step = props.steps[futureStep]
-        if (typeof step.before !== 'undefined') {
+        if (step.before) {
           try {
             await step.before('next')
           } catch (e) {
@@ -172,7 +175,7 @@ export default {
       stop()
     }
 
-    const handleKeyup = (e) => {
+    const handleKeyup = (e: KeyboardEvent) => {
       if (customOptions.value.debug) {
         console.log('[Vue Tour] A keyup event occured:', e)
       }
@@ -189,14 +192,14 @@ export default {
       }
     }
 
-    const isKeyEnabled = (key) => {
+    const isKeyEnabled = (key: 'ESCAPE' | 'ARROW_LEFT' | 'ARROW_RIGHT') => {
       const { enabledNavigationKeys } = customOptions.value
-      return enabledNavigationKeys.hasOwnProperty(key) ? enabledNavigationKeys[key] : true
+      return enabledNavigationKeys?.hasOwnProperty(key) ? enabledNavigationKeys[key] : true
     }
 
     onMounted(() => {
       const app = getCurrentInstance()
-      app.appContext.config.globalProperties.$tours[props.name] = { step, start, isRunning, customOptions, currentStep, isFirst, isLast, previousStep, nextStep, stop, skip, finish }
+      app!.appContext.config.globalProperties.$tours[props.name] = { step, start, isRunning, customOptions, currentStep, isFirst, isLast, previousStep, nextStep, stop, skip, finish }
       if (customOptions.value.useKeyboardNavigation) {
         window.addEventListener('keyup', handleKeyup)
       }
@@ -210,7 +213,7 @@ export default {
 
     return { customOptions, currentStep, isFirst, isLast, previousStep, nextStep, stop, skip, finish }
   }
-}
+})
 </script>
 
 <style lang="scss">

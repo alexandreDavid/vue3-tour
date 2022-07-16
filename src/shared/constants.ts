@@ -1,13 +1,15 @@
+import type { Options, StepOptions } from "./types"
+
 export const DEFAULT_CALLBACKS = {
   onStart: () => {},
-  onPreviousStep: (currentStep) => {},
-  onNextStep: (currentStep) => {},
+  onPreviousStep: (currentStep: number) => {},
+  onNextStep: (currentStep: number) => {},
   onStop: () => {},
   onSkip: () => {},
   onFinish: () => {}
 }
 
-export const DEFAULT_OPTIONS = {
+export const DEFAULT_OPTIONS: Options = {
   highlight: false,
   labels: {
     buttonSkip: 'Skip tour',
@@ -43,15 +45,18 @@ export const HIGHLIGHT = {
   stopOnTargetNotFound: true
 }
 
-export const DEFAULT_STEP_OPTIONS = {
+export const DEFAULT_STEP_OPTIONS: StepOptions = {
   enableScrolling: true,
   highlight: DEFAULT_OPTIONS.highlight, // By default use the global tour setting
   enabledButtons: DEFAULT_OPTIONS.enabledButtons,
-  modifiers: {
-    arrow: {
-      element: '.v-step__arrow'
-    }
-  },
+  modifiers: [
+    {
+      name: 'arrow',
+      options: {
+        element: '.v-step__arrow'
+      }
+    },
+  ],
   placement: 'bottom'
 }
 
