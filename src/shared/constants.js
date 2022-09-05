@@ -47,11 +47,20 @@ export const DEFAULT_STEP_OPTIONS = {
   enableScrolling: true,
   highlight: DEFAULT_OPTIONS.highlight, // By default use the global tour setting
   enabledButtons: DEFAULT_OPTIONS.enabledButtons,
-  modifiers: {
-    arrow: {
-      element: '.v-step__arrow'
-    }
-  },
+  modifiers: [
+    {
+      name: 'offset',
+      options: {
+        offset: ({ placement }) => {
+          if (placement === 'top' || placement === 'bottom') {
+            return [0, 8];
+          } else {
+            return [8, 0];
+          }
+        },
+      },
+    },
+  ],
   placement: 'bottom'
 }
 
