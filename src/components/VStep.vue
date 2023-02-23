@@ -119,10 +119,7 @@ export default {
       if (props.debug) {
         console.log('[Vue Tour] The target element ' + props.step.target + ' of .v-step[id="' + hash + '"] is:', targetElement)
       }
-
-      if (isSticky.value) {
-        document.body.appendChild(VStep)
-      } else {
+      if (!isSticky.value) {
         if (targetElement) {
           enableScrolling()
           createHighlight()
@@ -190,7 +187,7 @@ export default {
     }
 
     const removeHighlight = () => {
-      if (isHighlightEnabled()) {
+      if (isHighlightEnabled() && targetElement) {
         const currentTransition = targetElement.style.transition
         targetElement.classList.remove(HIGHLIGHT.CLASSES.TARGET_HIGHLIGHTED)
         targetElement.classList.remove(HIGHLIGHT.CLASSES.TARGET_RELATIVE)
