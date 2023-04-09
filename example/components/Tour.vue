@@ -34,12 +34,13 @@
           }
         ],
         options: {
-            highlight: true
+            highlight: true,
+            debug: true 
         }
       }
     },
     mounted: function () {
-      this.$tours['myTour'].start()
+      // this.$tours['myTour'].start()
     }
   }
 </script>
