@@ -19,7 +19,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "types"
   ],
   "main": "dist/vue3-tour.umd.js",
   "browser": "dist/vue3-tour.umd.js",
