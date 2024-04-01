@@ -1,25 +1,36 @@
 {
-  "name": "vue3-tour",
-  "version": "0.3.4",
+  "name": "coodde-vue3-tour",
+  "version": "0.4.0",
   "scripts": {
+    "check": "vue-tsc --noEmit",
     "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
+    "build": "vite build && vue-tsc --declaration --emitDeclarationOnly",
+    "serve": "vite preview",
+    "lint": "eslint --ext .ts,.vue --ignore-path .gitignore --fix src",
+    "format": "prettier .  --write"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.6",
     "hash-sum": "^2.0.0",
-    "jump.js": "^1.0.2",
+    "jump.js": "^1.0.2", 
     "vue": "^3.2.37"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.9.0",
+    "@vue/eslint-config-prettier": "^9.0.0",
+    "@vue/eslint-config-typescript": "^13.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-vue": "^9.24.0",
+    "prettier": "^3.2.5",
     "sass": "^1.53.0",
-    "vite": "^2.0.5"
+    "vite": "^2.0.5",
+    "vue-tsc": "~0.38.5"
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "types"
   ],
   "main": "dist/vue3-tour.umd.js",
   "browser": "dist/vue3-tour.umd.js",
@@ -27,16 +38,17 @@
   "types": "types/vue3-tour.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexandreDavid/vue3-tour.git"
+    "url": "git+https://github.com/coodde/vue3-tour.git"
   },
   "keywords": [
     "vue",
-    "tour"
+    "tour",
+    "guide"
   ],
-  "author": "Alexandre David",
+  "author": "Svyatoslav Ryzhok",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/alexandreDavid/vue3-tour/issues"
+    "url": "https://github.com/coodde/vue3-tour/issues"
   },
-  "homepage": "https://github.com/alexandreDavid/vue3-tour#readme"
+  "homepage": "https://github.com/coodde/vue3-tour#readme"
 }

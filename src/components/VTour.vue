@@ -18,8 +18,8 @@
       <!--Default slot {{ currentStep }}-->
       <v-step
         v-if="steps[currentStep]"
-        :step="steps[currentStep]"
         :key="currentStep"
+        :step="steps[currentStep]"
         :previous-step="previousStep"
         :next-step="nextStep"
         :stop="stop"
@@ -30,187 +30,290 @@
         :labels="customOptions.labels"
         :enabled-buttons="customOptions.enabledButtons"
         :highlight="customOptions.highlight"
+        :backdrop="customOptions.backdrop"
         :stop-on-fail="customOptions.stopOnTargetNotFound"
         :debug="customOptions.debug"
-        @targetNotFound="$emit('targetNotFound', $event)"
+        @="$emit('targetNotFound', $event)"
+        @target-element="setTargetElement"
       >
         <!--<div v-if="index === 2" slot="actions">
           <a @click="nextStep">Next step</a>
         </div>-->
       </v-step>
     </slot>
+    <svg class="v-tour__backdrop">
+      <!-- eslint-disable max-len -->
+      <path
+        v-if="customOptions.backdrop"
+        :d="`M${viewport?.width},${viewport?.height}H0V0H${viewport?.width}V${viewport?.height}ZM${targetRect?.left},${targetRect?.top}a0,0,0,0,0-0,0V${targetRect?.bottom}a0,0,0,0,0,0,0H${targetRect?.right}a0,0,0,0,0,0-0V${targetRect?.top}a0,0,0,0,0-0-0Z`"
+      />
+      <!-- eslint-enable max-len -->
+    </svg>
   </div>
 </template>
 
-<script>
-import { ref, computed, onMounted, onBeforeUnmount, getCurrentInstance } from 'vue'
-import { DEFAULT_CALLBACKS, DEFAULT_OPTIONS, KEYS } from '../shared/constants'
+<script lang="ts">
+  import {
+    ref,
+    computed,
+    onMounted,
+    onBeforeUnmount,
+    getCurrentInstance,
+    defineComponent,
+    type PropType,
+  } from 'vue';
 
-export default {
-  name: 'v-tour',
-  props: {
-    steps: {
-      type: Array,
-      default: () => []
+  import type { Options, Step } from '../shared/types';
+  import {
+    DEFAULT_CALLBACKS,
+    DEFAULT_OPTIONS,
+    KEYS,
+  } from '../shared/constants';
+
+  export default defineComponent({
+    name: 'VTour',
+    props: {
+      steps: {
+        type: Array as PropType<Step[]>,
+        default: () => [],
+      },
+      name: {
+        type: String,
+        required: true,
+      },
+      options: {
+        type: Object as PropType<Partial<Options>>,
+        default: () => {
+          return DEFAULT_OPTIONS;
+        },
+      },
+      callbacks: {
+        type: Object as PropType<Partial<typeof DEFAULT_CALLBACKS>>,
+        default: () => {
+          return DEFAULT_CALLBACKS;
+        },
+      },
     },
-    name: {
-      type: String
-    },
-    options: {
-      type: Object,
-      default: () => { return DEFAULT_OPTIONS }
-    },
-    callbacks: {
-      type: Object,
-      default: () => { return DEFAULT_CALLBACKS }
-    }
-  },
-  setup (props, ctx) {
-    const currentStep = ref(-1)
+    setup(props) {
+      console.log(props.options);
+      const currentStep = ref(-1);
 
-    const customOptions = computed(() => {
-      return {
-        ...DEFAULT_OPTIONS,
-        ...props.options
-      }
-    })
+      const targetElement = ref(null);
+      const targetRect = ref({ left: 0, top: 0, bottom: 0, right: 0 });
+      const viewport = ref({
+        width: document.documentElement.clientWidth,
+        height: document.documentElement.clientHeight,
+      });
+      const setTargetElement = (e) => {
+        targetElement.value = e;
+      };
 
-    const customCallbacks = computed(() => {
-      return {
-        ...DEFAULT_CALLBACKS,
-        ...props.callbacks
-      }
-    })
+      const customOptions = computed(() => {
+        return {
+          ...DEFAULT_OPTIONS,
+          ...props.options,
+        };
+      });
 
-    const isRunning = computed(() => currentStep.value > -1 && currentStep.value < numberOfSteps.value)
+      const customCallbacks = computed(() => {
+        return {
+          ...DEFAULT_CALLBACKS,
+          ...props.callbacks,
+        };
+      });
 
-    const isFirst = computed(() => currentStep.value === 0)
+      const isRunning = computed(
+        () => currentStep.value > -1 && currentStep.value < numberOfSteps.value,
+      );
 
-    const isLast = computed(() => currentStep.value === props.steps.length - 1)
+      const isFirst = computed(() => currentStep.value === 0);
 
-    const numberOfSteps = computed(() => props.steps.length)
+      const isLast = computed(
+        () => currentStep.value === props.steps.length - 1,
+      );
 
-    const step = computed(() => props.steps[currentStep.value])
+      const numberOfSteps = computed(() => props.steps.length);
 
-    const start = async (startStep) => {
-      // Wait for the DOM to be loaded, then start the tour
-      startStep = typeof startStep !== 'undefined' ? parseInt(startStep, 10) : 0
-      let step = props.steps[startStep]
-      let process = () => new Promise((resolve, reject) => {
-        setTimeout(() => {
-          customCallbacks.value.onStart()
-          currentStep.value = startStep
-          resolve()
-        }, customOptions.value.startTimeout)
-      })
-      if (typeof step.before !== 'undefined') {
-        try {
-          await step.before('start')
-        } catch (e) {
-          return Promise.reject(e)
-        }
-      }
-      await process()
-      return Promise.resolve()
-    }
+      const step = computed(() => props.steps[currentStep.value]);
 
-    const previousStep = async () => {
-      let futureStep = currentStep.value - 1
-      let process = () => new Promise((resolve, reject) => {
-        customCallbacks.value.onPreviousStep(currentStep.value)
-        currentStep.value = futureStep
-        resolve()
-      })
-      if (futureStep > -1) {
-        let step = props.steps[futureStep]
-        if (typeof step.before !== 'undefined') {
+      const start = async (startStep: string) => {
+        // Wait for the DOM to be loaded, then start the tour
+        const startStepIdx =
+          typeof startStep !== 'undefined' ? parseInt(startStep, 10) : 0;
+        const step = props.steps[startStepIdx];
+
+        const process = () =>
+          new Promise<void>((resolve) => {
+            setTimeout(() => {
+              customCallbacks.value.onStart();
+              currentStep.value = startStepIdx;
+              resolve();
+            }, customOptions.value.startTimeout);
+          });
+        if (step.before) {
           try {
-            await step.before('previous')
+            await step.before('start');
           } catch (e) {
-            return Promise.reject(e)
+            return Promise.reject(e);
           }
         }
-        await process()
-      }
-      return Promise.resolve()
-    }
+        await process();
+        return Promise.resolve();
+      };
 
-    const nextStep = async () => {
-      let futureStep = currentStep.value + 1
-      let process = () => new Promise((resolve, reject) => {
-        customCallbacks.value.onNextStep(currentStep.value)
-        currentStep.value = futureStep
-        resolve()
-      })
-      if (futureStep < numberOfSteps.value && currentStep.value !== -1) {
-        let step = props.steps[futureStep]
-        if (typeof step.before !== 'undefined') {
-          try {
-            await step.before('next')
-          } catch (e) {
-            return Promise.reject(e)
+      const previousStep = async () => {
+        const futureStep = currentStep.value - 1;
+        const process = () =>
+          new Promise<void>((resolve) => {
+            customCallbacks.value.onPreviousStep(currentStep.value);
+            currentStep.value = futureStep;
+            resolve();
+          });
+        if (futureStep > -1) {
+          const step = props.steps[futureStep];
+          if (step.before) {
+            try {
+              await step.before('previous');
+            } catch (e) {
+              return Promise.reject(e);
+            }
           }
+          await process();
         }
-        await process()
-      }
-      return Promise.resolve()
-    }
+        return Promise.resolve();
+      };
 
-    const stop = () => {
-      customCallbacks.value.onStop()
-      document.body.classList.remove('v-tour--active')
-      currentStep.value = -1
-    }
+      const nextStep = async () => {
+        const futureStep = currentStep.value + 1;
+        const process = () =>
+          new Promise<void>((resolve) => {
+            customCallbacks.value.onNextStep(currentStep.value);
+            currentStep.value = futureStep;
+            resolve();
+          });
+        if (futureStep < numberOfSteps.value && currentStep.value !== -1) {
+          const step = props.steps[futureStep];
+          if (step.before) {
+            try {
+              await step.before('next');
+            } catch (e) {
+              return Promise.reject(e);
+            }
+          }
+          await process();
+        }
+        return Promise.resolve();
+      };
 
-    const skip = () => {
-      customCallbacks.value.onSkip()
-      stop()
-    }
+      const stop = () => {
+        customCallbacks.value.onStop();
+        document.body.classList.remove('v-tour--active');
+        currentStep.value = -1;
+      };
 
-    const finish = () => {
-      customCallbacks.value.onFinish()
-      stop()
-    }
+      const skip = () => {
+        customCallbacks.value.onSkip();
+        stop();
+      };
 
-    const handleKeyup = (e) => {
-      if (customOptions.value.debug) {
-        console.log('[Vue Tour] A keyup event occured:', e)
-      }
-      switch (e.keyCode) {
-        case KEYS.ARROW_RIGHT:
-          isKeyEnabled('ARROW_RIGHT') && nextStep()
-          break
-        case KEYS.ARROW_LEFT:
-          isKeyEnabled('ARROW_LEFT') && previousStep()
-          break
-        case KEYS.ESCAPE:
-          isKeyEnabled('ESCAPE') && stop()
-          break
-      }
-    }
+      const finish = () => {
+        customCallbacks.value.onFinish();
+        stop();
+      };
 
-    const isKeyEnabled = (key) => {
-      const { enabledNavigationKeys } = customOptions.value
-      return enabledNavigationKeys.hasOwnProperty(key) ? enabledNavigationKeys[key] : true
-    }
+      const handleScroll = () => {
+        targetRect.value = targetElement.value
+          ? targetElement.value.getBoundingClientRect()
+          : { left: 0, top: 0, right: 0, bottom: 0 };
+      };
 
-    onMounted(() => {
-      const app = getCurrentInstance()
-      app.appContext.config.globalProperties.$tours[props.name] = { step, start, isRunning, customOptions, currentStep, isFirst, isLast, previousStep, nextStep, stop, skip, finish, numberOfSteps }
-      if (customOptions.value.useKeyboardNavigation) {
-        window.addEventListener('keyup', handleKeyup)
-      }
-    })
+      const handleResize = () => {
+        viewport.value = {
+          width: document.documentElement.clientWidth,
+          height: document.documentElement.clientHeight,
+        };
+        handleScroll();
+      };
 
-    onBeforeUnmount(() => {
-      if (customOptions.value.useKeyboardNavigation) {
-        window.removeEventListener('keyup', handleKeyup)
-      }
-    })
+      const handleKeyup = (e: KeyboardEvent) => {
+        if (customOptions.value.debug) {
+          console.log('[Vue Tour] A keyup event occured:', e);
+        }
+        switch (e.keyCode) {
+          case KEYS.ARROW_RIGHT:
+            isKeyEnabled('ARROW_RIGHT') && nextStep();
+            break;
+          case KEYS.ARROW_LEFT:
+            isKeyEnabled('ARROW_LEFT') && previousStep();
+            break;
+          case KEYS.ESCAPE:
+            isKeyEnabled('ESCAPE') && stop();
+            break;
+        }
+      };
 
-    return { customOptions, currentStep, isFirst, isLast, previousStep, nextStep, stop, skip, finish }
-  }
-}
+      const isKeyEnabled = (key: 'ESCAPE' | 'ARROW_LEFT' | 'ARROW_RIGHT') => {
+        const { enabledNavigationKeys } = customOptions.value;
+        return Object.prototype.hasOwnProperty.call(enabledNavigationKeys, key)
+          ? enabledNavigationKeys[key]
+          : true;
+      };
+
+      onMounted(() => {
+        const app = getCurrentInstance();
+        app!.appContext.config.globalProperties.$tours[props.name] = {
+          step,
+          start,
+          isRunning,
+          customOptions,
+          currentStep,
+          isFirst,
+          isLast,
+          previousStep,
+          nextStep,
+          stop,
+          skip,
+          finish,
+          numberOfSteps,
+          setTargetElement,
+          targetRect,
+          viewport,
+        };
+        if (customOptions.value.useKeyboardNavigation) {
+          window.addEventListener('keyup', handleKeyup);
+        }
+        if (customOptions.value.backdrop) {
+          window.addEventListener('scroll', handleScroll);
+          window.addEventListener('resize', handleResize);
+        }
+      });
+
+      onBeforeUnmount(() => {
+        if (customOptions.value.useKeyboardNavigation) {
+          window.removeEventListener('keyup', handleKeyup);
+        }
+        if (customOptions.value.backdrop) {
+          window.removeEventListener('scroll', handleScroll);
+          window.removeEventListener('resize', handleResize);
+        }
+      });
+
+      return {
+        customOptions,
+        currentStep,
+        isFirst,
+        isLast,
+        previousStep,
+        nextStep,
+        stop,
+        skip,
+        finish,
+        setTargetElement,
+        targetRect,
+        viewport,
+      };
+    },
+  });
 </script>
 
 <style lang="scss">
@@ -221,11 +324,36 @@ export default {
     pointer-events: auto;
   }
   .v-tour__target--highlighted {
-    box-shadow: 0 0 0 4px rgba(0,0,0,.4);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.4);
     pointer-events: auto;
     z-index: 9999;
+    border-radius: 4px;
   }
   .v-tour__target--relative {
     position: relative;
+  }
+  .v-tour__backdrop {
+    display: block;
+    vertical-align: middle;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 0;
+    width: 100vw;
+    opacity: 0;
+    transform: translateZ(0);
+    transition:
+      all 0.3s ease-out,
+      height 0s 0s,
+      opacity 0.3s 0s;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+
+    &.v-tour__backdrop--active {
+      height: 100vh;
+      opacity: 0.5;
+      z-index: 9997;
+    }
   }
 </style>
