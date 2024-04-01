@@ -20,6 +20,7 @@
         v-if="steps[currentStep]"
         :key="currentStep"
         :step="steps[currentStep]"
+        :step-id="currentStep"
         :previous-step="previousStep"
         :next-step="nextStep"
         :stop="stop"
@@ -95,7 +96,6 @@
       },
     },
     setup(props) {
-      console.log(props.options);
       const currentStep = ref(-1);
 
       const targetElement = ref(null);

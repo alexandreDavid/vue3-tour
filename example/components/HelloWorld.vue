@@ -18,7 +18,7 @@
   <button @click="$tours['myTour'].start()">Start Tour</button>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import { defineProps } from 'vue';
 
   defineProps({

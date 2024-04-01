@@ -95,6 +95,10 @@
         type: Object as PropType<Step>,
         required: true,
       },
+      stepId: {
+        type: String,
+        required: true,
+      },
       previousStep: {
         type: Function as PropType<(evt?: MouseEvent) => void>,
       },
@@ -149,12 +153,15 @@
     },
     emits: ['targetNotFound', 'target-element'],
     setup(props, context) {
-      const hash = sum(props.step.target);
-      const targetElement =
+      const isStringTarget =
         typeof props.step.target === 'string' ||
-        props.step.target instanceof String
-          ? (document.querySelector(props.step.target) as HTMLElement)
-          : props.step.target?.value;
+        props.step.target instanceof String;
+      const targetElement = isStringTarget
+        ? (document.querySelector(props.step.target) as HTMLElement)
+        : props.step.target?.value;
+      const hash = sum(
+        isStringTarget ? props.step.target : `e-ref|${props.stepId}`,
+      );
 
       const params = computed(() => {
         return {
