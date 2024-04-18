@@ -1,7 +1,9 @@
+import { PopperParams } from '../../types/vue3-tour'
+
 export const DEFAULT_CALLBACKS = {
   onStart: () => {},
-  onPreviousStep: (currentStep) => {},
-  onNextStep: (currentStep) => {},
+  onPreviousStep: () => {},
+  onNextStep: () => {},
   onStop: () => {},
   onSkip: () => {},
   onFinish: () => {}
@@ -28,6 +30,7 @@ export const DEFAULT_OPTIONS = {
     ARROW_RIGHT: true,
     ARROW_LEFT: true
   },
+  stopOnTargetNotFound: true,
   debug: false
 }
 
@@ -43,7 +46,7 @@ export const HIGHLIGHT = {
   stopOnTargetNotFound: true
 }
 
-export const DEFAULT_STEP_OPTIONS = {
+export const DEFAULT_STEP_OPTIONS: PopperParams = {
   enableScrolling: true,
   highlight: DEFAULT_OPTIONS.highlight, // By default use the global tour setting
   enabledButtons: DEFAULT_OPTIONS.enabledButtons,
@@ -51,7 +54,7 @@ export const DEFAULT_STEP_OPTIONS = {
     {
       name: 'offset',
       options: {
-        offset: ({ placement }) => {
+        offset: ({ placement }: { placement: string }) => {
           if (placement === 'top' || placement === 'bottom') {
             return [0, 8];
           } else {
@@ -61,7 +64,7 @@ export const DEFAULT_STEP_OPTIONS = {
       },
     },
   ],
-  placement: 'bottom'
+  placement: 'bottom',
 }
 
 export const KEYS = {
