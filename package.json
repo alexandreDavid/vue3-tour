@@ -1,25 +1,30 @@
 {
   "name": "vue3-tour",
-  "version": "0.3.4",
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vue-tsc && vite build",
     "serve": "vite preview"
   },
   "dependencies": {
-    "@popperjs/core": "^2.11.6",
-    "hash-sum": "^2.0.0",
+    "@popperjs/core": "^2.11.8",
     "jump.js": "^1.0.2",
-    "vue": "^3.2.37"
+    "vue": "^3.4.23"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^1.9.0",
-    "sass": "^1.53.0",
-    "vite": "^2.0.5"
+    "@types/jump.js": "^1.0.6",
+    "@types/node": "^20.12.7",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "sass": "^1.75.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.8",
+    "vue-tsc": "^2.0.11"
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "types"
   ],
   "main": "dist/vue3-tour.umd.js",
   "browser": "dist/vue3-tour.umd.js",

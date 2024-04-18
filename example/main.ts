@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import Lib from '../src/lib.js'
+import Lib from '../src/lib.ts'
 
 const app = createApp(App)
 
