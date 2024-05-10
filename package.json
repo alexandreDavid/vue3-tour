@@ -28,7 +28,7 @@
   ],
   "main": "dist/vue3-tour.umd.js",
   "browser": "dist/vue3-tour.umd.js",
-  "module": "dist/vue3-tour.es.js",
+  "module": "dist/vue3-tour.js",
   "types": "types/vue3-tour.d.ts",
   "repository": {
     "type": "git",
