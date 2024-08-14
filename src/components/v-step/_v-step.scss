@@ -60,12 +60,12 @@
 }
 
 .v-step[data-popper-placement^="right"]>.v-step__arrow {
-  left: -5px;
+  left: -9px;
   top: calc(50% - 10px);
 }
 
 .v-step[data-popper-placement^="left"]>.v-step__arrow {
-  right: -5px;
+  right: 1px;
   top: calc(50% - 10px);
 }
 

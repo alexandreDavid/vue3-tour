@@ -54,12 +54,8 @@ export const DEFAULT_STEP_OPTIONS: PopperParams = {
     {
       name: 'offset',
       options: {
-        offset: ({ placement }: { placement: string }) => {
-          if (placement === 'top' || placement === 'bottom') {
-            return [0, 8];
-          } else {
-            return [8, 0];
-          }
+        offset: () => {
+          return [0, 8];
         },
       },
     },
