@@ -26,8 +26,8 @@
     "src",
     "types"
   ],
-  "main": "dist/vue3-tour.umd.js",
-  "browser": "dist/vue3-tour.umd.js",
+  "main": "dist/vue3-tour.umd.cjs",
+  "browser": "dist/vue3-tour.umd.cjs",
   "module": "dist/vue3-tour.js",
   "types": "types/vue3-tour.d.ts",
   "repository": {
